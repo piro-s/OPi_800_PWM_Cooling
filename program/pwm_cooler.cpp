@@ -30,12 +30,14 @@ using namespace std;
 
 static int getTemperature()
 {
-  static fstream myfile;
-  int temperature = 0;
-  myfile.open("/sys/devices/virtual/thermal/thermal_zone0/temp", ios_base::in);
-  myfile >> temperature;
-  myfile.close();
-  return (temperature / 1000); // Adjustment
+    static fstream myfile;
+    int temperature = 0;
+
+    myfile.open("/sys/devices/virtual/thermal/thermal_zone0/temp", ios_base::in);
+    myfile >> temperature;
+    myfile.close();
+
+    return (temperature / 1000);
 } // static int getTemperature()
 
 int main()
@@ -45,68 +47,66 @@ int main()
 
     try
     {
-        if(wiringPiSetup() == 0)
+        wiringPiSetup();
+        while(1)
         {
-            while(1)
-            {
-                temperature = getTemperature();
+            temperature = getTemperature();
 
-                if(temperature > TEMPERATURE_4)
+            if(temperature > TEMPERATURE_4)
+            {
+                if(pwmStopped)
                 {
-                    if(pwmStopped)
-                    {
-                        softPwmCreate(PIN, ((PWM_VALUE4 * RANGE) / 100), RANGE);
-                        pwmStopped = false;
-                    }
-                    else
-                    {
-                        softPwmWrite(PIN, ((PWM_VALUE4 * RANGE) / 100));
-                    }
-                }
-                else if(temperature > TEMPERATURE_3)
-                {
-                    if(pwmStopped)
-                    {
-                      softPwmCreate(PIN, ((PWM_VALUE3 * RANGE) / 100), RANGE);
-                      pwmStopped = false;
-                    }
-                    else
-                    {
-                        softPwmWrite(PIN, ((PWM_VALUE3 * RANGE) / 100));
-                    }
-                }
-                else if(temperature > TEMPERATURE_2)
-                {
-                    if(pwmStopped)
-                    {
-                        softPwmCreate(PIN, ((PWM_VALUE2 * RANGE) / 100), RANGE);
-                        pwmStopped = false;
-                    }
-                    else
-                    {
-                        softPwmWrite(PIN, ((PWM_VALUE2 * RANGE) / 100));
-                    }
-                }
-                else if(temperature > TEMPERATURE_1)
-                {
-                    if (pwmStopped)
-                    {
-                        softPwmCreate(PIN, ((PWM_VALUE1 * RANGE) / 100), RANGE);
-                        pwmStopped = false;
-                    }
-                    else
-                    {
-                        softPwmWrite(PIN, ((PWM_VALUE1 * RANGE) / 100));
-                    }
+                    softPwmCreate(PIN, ((PWM_VALUE4 * RANGE) / 100), RANGE);
+                    pwmStopped = false;
                 }
                 else
                 {
-                    softPwmStop(PIN);
-                    pwmStopped = true;
+                    softPwmWrite(PIN, ((PWM_VALUE4 * RANGE) / 100));
                 }
-
-                usleep(1000 * 1000);
             }
+            else if(temperature > TEMPERATURE_3)
+            {
+                if(pwmStopped)
+                {
+                  softPwmCreate(PIN, ((PWM_VALUE3 * RANGE) / 100), RANGE);
+                  pwmStopped = false;
+                }
+                else
+                {
+                    softPwmWrite(PIN, ((PWM_VALUE3 * RANGE) / 100));
+                }
+            }
+            else if(temperature > TEMPERATURE_2)
+            {
+                if(pwmStopped)
+                {
+                    softPwmCreate(PIN, ((PWM_VALUE2 * RANGE) / 100), RANGE);
+                    pwmStopped = false;
+                }
+                else
+                {
+                    softPwmWrite(PIN, ((PWM_VALUE2 * RANGE) / 100));
+                }
+            }
+            else if(temperature > TEMPERATURE_1)
+            {
+                if (pwmStopped)
+                {
+                    softPwmCreate(PIN, ((PWM_VALUE1 * RANGE) / 100), RANGE);
+                    pwmStopped = false;
+                }
+                else
+                {
+                    softPwmWrite(PIN, ((PWM_VALUE1 * RANGE) / 100));
+                }
+            }
+            else
+            {
+                softPwmStop(PIN);
+                pwmStopped = true;
+            }
+
+            usleep(1000 * 1000);
         }
     }
     catch (exception& e)
