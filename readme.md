@@ -19,13 +19,11 @@ Active cooling for Orange Pi 800. The fan was purchased [here](https://aliexpres
 5. Create autostart if needed.  
 
 ### Test  
-Play 1080p video on YouTube.  
-PWM off:  
-![pwm_cooler_off](docs/pwm_cooler_off.png)  
-PWM on:  
-![pwm_cooler_on](docs/pwm_cooler_on.png)  
+Play 1080p video on YouTube.   
+![pwm_cooler](docs/pwm_cooler.png)  
 
 ### Process  
+![step_0](process/step_0.jpg)
 ![step_1](process/step_1.jpg)  
 ![step_2](process/step_2.jpg)  
 ![step_3](process/step_3.jpg)  
